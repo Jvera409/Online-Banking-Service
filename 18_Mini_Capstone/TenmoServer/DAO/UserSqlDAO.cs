@@ -34,7 +34,6 @@ namespace TenmoServer.DAO
                     returnUser = GetUserFromReader(reader);
                 }
             }
-
             return returnUser;
         }
 
@@ -56,7 +55,6 @@ namespace TenmoServer.DAO
                         User u = GetUserFromReader(reader);
                         returnUsers.Add(u);
                     }
-
                 }
             }
 

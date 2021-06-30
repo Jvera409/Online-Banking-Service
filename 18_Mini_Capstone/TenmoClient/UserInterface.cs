@@ -1,5 +1,7 @@
 ﻿using System;
 using TenmoClient.Data;
+using TenmoClient.APIClients;
+using System.Collections.Generic;
 
 namespace TenmoClient
 {
@@ -7,6 +9,8 @@ namespace TenmoClient
     {
         private readonly ConsoleService consoleService = new ConsoleService();
         private readonly AuthService authService = new AuthService();
+        private AccountAPI accountAPI = new AccountAPI();
+        private UserAPI userAPI = new UserAPI();
 
         private bool shouldExit = false;
 
@@ -56,11 +60,11 @@ namespace TenmoClient
             {
                 Console.WriteLine();
                 Console.WriteLine("Welcome to TEnmo! Please make a selection: ");
-                Console.WriteLine("1: View your current balance");
+                Console.WriteLine("1: View your current balance"); //done
                 Console.WriteLine("2: View your past transfers");
-                Console.WriteLine("3: View your pending requests");
+                Console.WriteLine("3: View your pending requests"); //optional
                 Console.WriteLine("4: Send TE bucks");
-                Console.WriteLine("5: Request TE bucks");
+                Console.WriteLine("5: Request TE bucks"); //optional
                 Console.WriteLine("6: Log in as different user");
                 Console.WriteLine("0: Exit");
                 Console.WriteLine("---------");
@@ -75,7 +79,7 @@ namespace TenmoClient
                     switch (menuSelection)
                     {
                         case 1:
-                            Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me
+                            GetAccountBalance();
                             break;
                         case 2:
                             Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me
@@ -84,7 +88,7 @@ namespace TenmoClient
                             Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me
                             break;
                         case 4:
-                            Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me
+                            GetUsers();
                             break;
                         case 5:
                             Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me
@@ -126,6 +130,23 @@ namespace TenmoClient
                 {
                     UserService.SetLogin(user);
                 }
+            }
+        }
+        private void GetAccountBalance()
+        {
+            Account account = new Account();
+            //decimal balance = accountAPI.GetBalance();
+            account = accountAPI.GetBalance();
+
+            Console.WriteLine($"Your account balance is ${account.Balance}.");
+            Console.WriteLine();
+        }
+        private void GetUsers()
+        {
+            List<User> users = userAPI.GetUsers();
+            foreach(User user in users)
+            {
+                Console.WriteLine(user.ToString());
             }
         }
     }
