@@ -1,19 +1,20 @@
-﻿using System;
+﻿using RestSharp;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using RestSharp;
 using TenmoClient.Data;
 
 namespace TenmoClient.APIClients
 {
-    public class UserAPI : AuthService
-    {
-        private readonly string API_URL = "https://localhost:44315/user/";
 
-        public List<User> GetUsers()
+    class TransferAPI : AuthService
+    {
+        private readonly string API_URL = "https://localhost:44315/account/";
+
+        public Transfer TranserFunds()
         {
             RestRequest request = new RestRequest(API_URL);
-            IRestResponse<List<User>> response = client.Get<List<User>>(request);
+            IRestResponse<Transfer> response = client.Post<Transfer>(request);
             if (response.ResponseStatus != ResponseStatus.Completed)
             {
                 throw new Exception("Error occurred - unable to reach server.");
@@ -27,6 +28,5 @@ namespace TenmoClient.APIClients
                 return response.Data;
             }
         }
-
     }
 }

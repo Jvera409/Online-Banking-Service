@@ -89,6 +89,7 @@ namespace TenmoClient
                             break;
                         case 4:
                             GetUsers();
+                            TransferFunds();
                             break;
                         case 5:
                             Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me
@@ -148,6 +149,15 @@ namespace TenmoClient
             {
                 Console.WriteLine(user.ToString());
             }
+        }
+
+        private void TransferFunds()
+        {
+            Console.WriteLine("Enter ID of user you are sending to(0 to cancel): ");
+            int userInput = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("Enter amount:");
+            decimal amount = decimal.Parse(Console.ReadLine());
         }
     }
 }
