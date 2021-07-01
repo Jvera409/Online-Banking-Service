@@ -22,6 +22,12 @@ namespace TenmoServer.DAO
             " JOIN accounts ON users.user_id = accounts.user_id " +
             " JOIN transfers ON accounts.account_id = transfers.account_to";
 
+        private string sqlGetTransferDetails = "SELECT transfer_id, account_from, account_to, amount, transfer_status_desc, transfer_type_desc, username FROM transfers " +
+            " JOIN transfer_statuses ON transfers.transfer_status_id = transfer_statuses.transfer_status_id " +
+            " JOIN transfer_types ON transfers.transfer_type_id = transfer_types.transfer_type_id " +
+            " JOIN accounts ON transfers.account_to = accounts.account_id " +
+            " JOIN users ON accounts.user_id = users.user_id WHERE transfer_id = @transfer_id";
+
 
         public TransferDAO(string connectionString)
         {
@@ -75,7 +81,7 @@ namespace TenmoServer.DAO
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 result = false;
             }
@@ -99,7 +105,7 @@ namespace TenmoServer.DAO
                     while (reader.Read() == true)
                     {
                         TransferResponse transfer = new TransferResponse();
-                        transfer.TransferId= Convert.ToInt32(reader["transfer_id"]);
+                        transfer.TransferId = Convert.ToInt32(reader["transfer_id"]);
                         transfer.AccountFromId = Convert.ToInt32(reader["account_from"]);
                         transfer.AccountToId = Convert.ToInt32(reader["account_to"]);
                         transfer.ToName = Convert.ToString(reader["username"]);
@@ -115,6 +121,39 @@ namespace TenmoServer.DAO
                 transfers = new List<TransferResponse>();
             }
             return transfers;
+        }
+        public TransferDetails GetTransferDetails(string fromName, int transferId)
+        {
+            TransferDetails transfer = new TransferDetails();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sqlGetTransferDetails, conn);
+                    cmd.Parameters.AddWithValue("@transfer_id", transferId);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read() == true)
+                    {
+                        transfer.TransferId = Convert.ToInt32(reader["transfer_id"]);
+                        transfer.ToName = Convert.ToString(reader["username"]);
+                        transfer.FromName = fromName;
+                        transfer.Amount = Convert.ToDecimal(reader["amount"]);
+                        transfer.TransferStatus = Convert.ToString(reader["transfer_status_desc"]);
+                        transfer.TransferType = Convert.ToString(reader["transfer_type_desc"]);
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                transfer = new TransferDetails();
+            }
+            return transfer;
         }
     }
 

@@ -11,5 +11,7 @@ namespace TenmoServer.DAO
         bool TransferFunds(Transfer transfer);
 
         List<TransferResponse> GetPastTransfers(string fromName);
+
+        TransferDetails GetTransferDetails(string fromName, int transferNumber);
     }
 }

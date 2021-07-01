@@ -64,5 +64,18 @@ namespace TenmoServer.Controllers
             return Ok(transfers);
             
         }
+
+        [HttpGet]
+        public ActionResult<TransferDetails> GetTransferDetails(int transferNumber)
+        {
+
+            string fromName = User.Identity.Name;
+            TransferDetails transfers = transferDAO.GetTransferDetails(fromName, transferNumber);
+
+
+            return Ok(transfers);
+
+        }
+
     }
 }
