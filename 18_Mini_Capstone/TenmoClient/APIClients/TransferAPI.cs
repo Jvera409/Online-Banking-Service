@@ -29,6 +29,23 @@ namespace TenmoClient.APIClients
                 return response.Data;
             }
         }
-        //can make separate class/data type to pass information from client to server
+        public List<TransferResponse> GetPastTransfers()
+        {
+            RestRequest request = new RestRequest(API_URL);
+            IRestResponse<List<TransferResponse>> response = client.Get<List<TransferResponse>>(request);
+            if (response.ResponseStatus != ResponseStatus.Completed)
+            {
+                throw new Exception("Error occurred - unable to reach server.");
+            }
+            else if (!response.IsSuccessful)
+            {
+                throw new Exception("Error occurred - received non-success response: " + (int)response.StatusCode);
+            }
+            else
+            {
+                return response.Data;
+            }
+            //can make separate class/data type to pass information from client to server
+        }
     }
 }

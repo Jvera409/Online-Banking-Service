@@ -82,7 +82,7 @@ namespace TenmoClient
                             GetAccountBalance();
                             break;
                         case 2:
-                            Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me
+                            GetPastTransfers(); // TODO: Implement me
                             break;
                         case 3:
                             Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me
@@ -90,6 +90,7 @@ namespace TenmoClient
                         case 4:
                             GetUsers();
                             TransferFunds();
+                            ShowMainMenu();
                             break;
                         case 5:
                             Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me
@@ -142,10 +143,12 @@ namespace TenmoClient
         }
         private void GetUsers()
         {
+            Console.WriteLine("UserID  Name");
+            Console.WriteLine("--------------");
             List<User> users = userAPI.GetUsers();
             foreach (User user in users)
             {
-                Console.WriteLine(user.ToString());
+                Console.WriteLine(user.UserId.ToString() + ") ".PadRight(3) + user.UserName);
             }
         }
 
@@ -153,12 +156,18 @@ namespace TenmoClient
         {
             bool done = false;
             while (!done)
-            {
+            { 
+
                 Transfer transfer = new Transfer();
 
                 TransferRequest tRequest = new TransferRequest();
                 Console.WriteLine("Enter ID of user you are sending to(0 to cancel): ");
                 tRequest.ToUserID = int.Parse(Console.ReadLine());
+
+                if(tRequest.ToUserID == 0)
+                {
+                    ShowMainMenu();
+                }
 
                 Console.WriteLine();
                 Console.WriteLine("Enter amount: ");
@@ -204,6 +213,27 @@ namespace TenmoClient
                 }
             }
             return result;
+        }
+        public void GetPastTransfers()
+        {
+            Console.WriteLine("------------------------------------------------");
+            Console.WriteLine("TransfersID          From/To             Amount");
+            Console.WriteLine("------------------------------------------------");
+            List<TransferResponse> transfers = transferAPI.GetPastTransfers();
+            foreach(TransferResponse transfer in transfers)
+            {
+                Console.WriteLine(transfer.TransferId + " " + "FROM: " + transfer.FromName + " " + "TO: " + transfer.ToName + " " + transfer.Amount);
+            }
+
+            Console.WriteLine("Please enter transfer ID to view details (0 to cancel)");
+            int transferNumber = int.Parse(Console.ReadLine());
+
+            if (transferNumber == 0)
+            {
+                ShowMainMenu();
+            }
+
+
         }
     }
 }

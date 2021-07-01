@@ -52,5 +52,17 @@ namespace TenmoServer.Controllers
                 return NotFound(result);
             }
         }
+
+        [HttpGet]
+        public ActionResult<List<Transfer>> GetTransfers()
+        {
+
+            string fromName = User.Identity.Name;
+            List<TransferResponse> transfers = transferDAO.GetPastTransfers(fromName);
+
+            
+            return Ok(transfers);
+            
+        }
     }
 }

@@ -18,6 +18,10 @@ namespace TenmoServer.DAO
         private string sqlUpdateToAccountBalance =
             "UPDATE accounts SET balance += @amount WHERE account_id = @account_to;";
 
+        private string sqlGetPastTransfers = "SELECT transfer_id, account_from, account_to, amount, username FROM users " +
+            " JOIN accounts ON users.user_id = accounts.user_id " +
+            " JOIN transfers ON accounts.account_id = transfers.account_to";
+
 
         public TransferDAO(string connectionString)
         {
@@ -59,8 +63,8 @@ namespace TenmoServer.DAO
                     //Update balance of From Account
                     SqlCommand cmdUpdateToAcc = new SqlCommand(sqlUpdateToAccountBalance, conn);
 
-                    cmdUpdateFromAcc.Parameters.AddWithValue("@amount", transfer.Amount);
-                    cmdUpdateFromAcc.Parameters.AddWithValue("@account_to", transfer.AccountToId);
+                    cmdUpdateToAcc.Parameters.AddWithValue("@amount", transfer.Amount);
+                    cmdUpdateToAcc.Parameters.AddWithValue("@account_to", transfer.AccountToId);
 
                     int count3 = cmdUpdateToAcc.ExecuteNonQuery();
 
@@ -77,5 +81,41 @@ namespace TenmoServer.DAO
             }
             return result;
         }
+        public List<TransferResponse> GetPastTransfers(string fromName)
+        {
+            List<TransferResponse> transfers = new List<TransferResponse>();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    SqlCommand cmd = new SqlCommand(sqlGetPastTransfers, conn);
+                    //cmd.Parameters.AddWithValue("@user_id", user_Id);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read() == true)
+                    {
+                        TransferResponse transfer = new TransferResponse();
+                        transfer.TransferId= Convert.ToInt32(reader["transfer_id"]);
+                        transfer.AccountFromId = Convert.ToInt32(reader["account_from"]);
+                        transfer.AccountToId = Convert.ToInt32(reader["account_to"]);
+                        transfer.ToName = Convert.ToString(reader["username"]);
+                        transfer.FromName = fromName;
+                        transfer.Amount = Convert.ToDecimal(reader["amount"]);
+
+                        transfers.Add(transfer);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                transfers = new List<TransferResponse>();
+            }
+            return transfers;
+        }
     }
+
 }
