@@ -24,7 +24,13 @@ namespace TenmoServer.Controllers
         {
             int user_id = int.Parse(this.User.FindFirst("sub").Value);
 
-            return Ok(accountDAO.GetBalance(user_id));
+            return Ok(accountDAO.GetAccount(user_id));
         }
+
+        //[HttpPut]
+        //public ActionResult<bool> UpdateBalance()
+        //{
+
+        //}
     }
 }

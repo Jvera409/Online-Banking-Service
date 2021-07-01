@@ -27,6 +27,5 @@ namespace TenmoClient.APIClients
                 return response.Data;
             }
         }
-
     }
 }

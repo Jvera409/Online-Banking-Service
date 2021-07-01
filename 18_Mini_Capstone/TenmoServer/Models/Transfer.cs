@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace TenmoClient.Data
+namespace TenmoServer.Models
 {
     public class Transfer
     {
@@ -12,6 +13,10 @@ namespace TenmoClient.Data
         public int AccountFromId { get; set; }
         public int AccountToId { get; set; }
         public decimal Amount { get; set; }
-        //toUserId, Amount
+
+        public override string ToString()
+        {
+            return $"";
+        }
     }
 }

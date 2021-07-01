@@ -10,7 +10,7 @@ namespace TenmoClient.APIClients
     {
         private readonly string API_URL = "https://localhost:44315/account/";
 
-        public Account GetBalance()
+        public decimal GetBalance()
         {
             RestRequest request = new RestRequest(API_URL);
             IRestResponse<Account> response = client.Get<Account>(request);
@@ -24,7 +24,7 @@ namespace TenmoClient.APIClients
             }
             else
             {
-                return response.Data;
+                return response.Data.Balance;
             }
         }
     }

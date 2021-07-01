@@ -9,9 +9,9 @@ namespace TenmoClient
     {
         private readonly ConsoleService consoleService = new ConsoleService();
         private readonly AuthService authService = new AuthService();
-        private AccountAPI accountAPI = new AccountAPI();
-        private UserAPI userAPI = new UserAPI();
-
+        private readonly AccountAPI accountAPI = new AccountAPI();
+        private readonly UserAPI userAPI = new UserAPI();
+        private readonly TransferAPI transferAPI = new TransferAPI();
         private bool shouldExit = false;
 
         public void Start()
@@ -135,17 +135,15 @@ namespace TenmoClient
         }
         private void GetAccountBalance()
         {
-            Account account = new Account();
-            //decimal balance = accountAPI.GetBalance();
-            account = accountAPI.GetBalance();
+            decimal balance = accountAPI.GetBalance();
 
-            Console.WriteLine($"Your account balance is ${account.Balance}.");
+            Console.WriteLine($"Your account balance is ${balance}.");
             Console.WriteLine();
         }
         private void GetUsers()
         {
             List<User> users = userAPI.GetUsers();
-            foreach(User user in users)
+            foreach (User user in users)
             {
                 Console.WriteLine(user.ToString());
             }
@@ -153,11 +151,59 @@ namespace TenmoClient
 
         private void TransferFunds()
         {
-            Console.WriteLine("Enter ID of user you are sending to(0 to cancel): ");
-            int userInput = int.Parse(Console.ReadLine());
+            bool done = false;
+            while (!done)
+            {
+                Transfer transfer = new Transfer();
 
-            Console.WriteLine("Enter amount:");
-            decimal amount = decimal.Parse(Console.ReadLine());
+                TransferRequest tRequest = new TransferRequest();
+                Console.WriteLine("Enter ID of user you are sending to(0 to cancel): ");
+                tRequest.ToUserID = int.Parse(Console.ReadLine());
+
+                Console.WriteLine();
+                Console.WriteLine("Enter amount: ");
+                tRequest.Amount = decimal.Parse(Console.ReadLine());
+                Console.WriteLine();
+
+
+                if (tRequest.Amount > accountAPI.GetBalance())
+                {
+                    Console.WriteLine("Insufficient funds.");
+                    Console.WriteLine();
+                    return;
+                }
+
+                bool fundsTransferred = transferAPI.TransferFunds(tRequest);
+                if (fundsTransferred)
+                {
+                    Console.WriteLine("Your transfer has been completed.");
+                    Console.WriteLine();
+                }
+                else
+                {
+                    Console.WriteLine("Unable to transfer funds.");
+                    Console.WriteLine();
+                }
+            }
+        }
+        public int GetToUserId()
+        {
+            bool done = false;
+            int result = 0;
+            while (!done)
+            {
+                try
+                {
+                    Console.WriteLine("Enter ID of user you are sending to(0 to cancel): ");
+                    result = int.Parse(Console.ReadLine());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Unable to transfer funds: {ex.Message}");
+                    Console.WriteLine();
+                }
+            }
+            return result;
         }
     }
 }

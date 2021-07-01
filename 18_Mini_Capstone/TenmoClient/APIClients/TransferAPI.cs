@@ -7,14 +7,15 @@ using TenmoClient.Data;
 namespace TenmoClient.APIClients
 {
 
-    class TransferAPI : AuthService
+    public class TransferAPI : AuthService
     {
-        private readonly string API_URL = "https://localhost:44315/account/";
+        private readonly string API_URL = "https://localhost:44315/transfer/";
 
-        public Transfer TranserFunds()
+        public bool TransferFunds(TransferRequest tRequest)
         {
             RestRequest request = new RestRequest(API_URL);
-            IRestResponse<Transfer> response = client.Post<Transfer>(request);
+            request.AddJsonBody(tRequest);
+            IRestResponse<bool> response = client.Post<bool>(request);
             if (response.ResponseStatus != ResponseStatus.Completed)
             {
                 throw new Exception("Error occurred - unable to reach server.");
@@ -28,5 +29,6 @@ namespace TenmoClient.APIClients
                 return response.Data;
             }
         }
+        //can make separate class/data type to pass information from client to server
     }
 }

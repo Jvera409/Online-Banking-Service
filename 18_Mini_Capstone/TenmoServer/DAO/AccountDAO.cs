@@ -11,14 +11,14 @@ namespace TenmoServer.DAO
     {
         private string connectionString;
         private string sqlGetAccountBalance =
-            "SELECT balance FROM accounts WHERE user_id = @user_id";
+            "SELECT balance, account_id, user_id FROM accounts WHERE user_id = @user_id";
 
         public AccountDAO(string connectionString)
         {
             this.connectionString = connectionString;
         }
 
-        public Account GetBalance(int user_Id)
+        public Account GetAccount(int user_Id)
         {
             Account account = new Account();
 
@@ -36,6 +36,8 @@ namespace TenmoServer.DAO
                     while (reader.Read())
                     {
                         account.Balance = Convert.ToDecimal(reader["balance"]);
+                        account.AccountId = Convert.ToInt32(reader["account_id"]);
+                        account.UserId = Convert.ToInt32(reader["user_id"]);
                     }
                 }
             }

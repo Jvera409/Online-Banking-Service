@@ -6,8 +6,8 @@ using TenmoServer.Models;
 
 namespace TenmoServer.DAO
 {
-    public interface IAccountDAO
+    public interface ITransferDAO
     {
-        Account GetAccount(int user_Id);
+        bool TransferFunds(Transfer transfer);
     }
 }
