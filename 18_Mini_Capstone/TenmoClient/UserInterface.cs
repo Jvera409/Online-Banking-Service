@@ -82,8 +82,8 @@ namespace TenmoClient
                             GetAccountBalance();
                             break;
                         case 2:
-                            /*int transferNumber =*/ GetPastTransfers();
-                            GetTransferDetails(5); // TODO: Implement me
+                            int transferNumber = GetPastTransfers();
+                            GetTransferDetails(transferNumber); // TODO: Implement me
                             break;
                         case 3:
                             Console.WriteLine("NOT IMPLEMENTED!"); // TODO: Implement me
@@ -215,15 +215,16 @@ namespace TenmoClient
             }
             return result;
         }
-        public void GetPastTransfers()
+        public int GetPastTransfers()
         {
             Console.WriteLine("------------------------------------------------");
-            Console.WriteLine("TransfersID     From/To      Amount");
+            Console.WriteLine("TransfersID           From/To            Amount");
             Console.WriteLine("------------------------------------------------");
             List<TransferResponse> transfers = transferAPI.GetPastTransfers();
             foreach (TransferResponse transfer in transfers)
             {
-                Console.WriteLine(transfer.TransferId + " " + "FROM: " + transfer.FromName + " " + "TO: " + transfer.ToName + " " + transfer.Amount);
+                Console.WriteLine(transfer.TransferId.ToString().PadRight(15) + " " + "FROM: " + transfer.FromName + " " + "TO: " + transfer.ToName.PadRight(10) + " " + transfer.Amount);
+                Console.WriteLine();
             }
 
             Console.WriteLine("Please enter transfer ID to view details (0 to cancel)");
@@ -233,12 +234,16 @@ namespace TenmoClient
             {
                 ShowMainMenu();
             }
-            //return transferNumber;
+            return transferNumber;
         }
         public void GetTransferDetails(int transferNumber)
         {
             TransferDetails transfer = transferAPI.GetTransferDetails(transferNumber);
 
+            Console.WriteLine();
+            Console.WriteLine("------------------");
+            Console.WriteLine("Transfer Details");
+            Console.WriteLine("------------------");
             Console.WriteLine("ID: " + transfer.TransferId);
             Console.WriteLine("From: " + transfer.FromName);
             Console.WriteLine("To: " + transfer.ToName);

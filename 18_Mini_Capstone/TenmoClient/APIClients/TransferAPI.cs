@@ -49,8 +49,7 @@ namespace TenmoClient.APIClients
         }
         public TransferDetails GetTransferDetails(int transferNumber)
         {
-            RestRequest request = new RestRequest(API_URL);
-            request.AddJsonBody(transferNumber);
+            RestRequest request = new RestRequest(API_URL + transferNumber);
             IRestResponse<TransferDetails> response = client.Get<TransferDetails>(request);
             if (response.ResponseStatus != ResponseStatus.Completed)
             {

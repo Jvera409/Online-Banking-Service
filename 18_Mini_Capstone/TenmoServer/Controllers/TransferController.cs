@@ -65,7 +65,7 @@ namespace TenmoServer.Controllers
             
         }
 
-        [HttpGet]
+        [HttpGet("{transferNumber}")]
         public ActionResult<TransferDetails> GetTransferDetails(int transferNumber)
         {
 
