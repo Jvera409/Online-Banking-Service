@@ -83,6 +83,12 @@ namespace TenmoClient
                             break;
                         case 2:
                             int transferNumber = GetPastTransfers();
+
+                            if(transferNumber == 0)
+                            {
+                                break;
+                            }
+
                             GetTransferDetails(transferNumber); // TODO: Implement me
                             break;
                         case 3:
@@ -158,16 +164,13 @@ namespace TenmoClient
             bool done = false;
             while (!done)
             {
-
-                Transfer transfer = new Transfer();
-
                 TransferRequest tRequest = new TransferRequest();
                 Console.WriteLine("Enter ID of user you are sending to(0 to cancel): ");
                 tRequest.ToUserID = int.Parse(Console.ReadLine());
 
                 if (tRequest.ToUserID == 0)
                 {
-                    ShowMainMenu();
+                    return;
                 }
 
                 Console.WriteLine();
@@ -194,26 +197,8 @@ namespace TenmoClient
                     Console.WriteLine("Unable to transfer funds.");
                     Console.WriteLine();
                 }
+                return;
             }
-        }
-        public int GetToUserId()
-        {
-            bool done = false;
-            int result = 0;
-            while (!done)
-            {
-                try
-                {
-                    Console.WriteLine("Enter ID of user you are sending to(0 to cancel): ");
-                    result = int.Parse(Console.ReadLine());
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Unable to transfer funds: {ex.Message}");
-                    Console.WriteLine();
-                }
-            }
-            return result;
         }
         public int GetPastTransfers()
         {
@@ -230,10 +215,6 @@ namespace TenmoClient
             Console.WriteLine("Please enter transfer ID to view details (0 to cancel)");
             int transferNumber = int.Parse(Console.ReadLine());
 
-            if (transferNumber == 0)
-            {
-                ShowMainMenu();
-            }
             return transferNumber;
         }
         public void GetTransferDetails(int transferNumber)
@@ -251,7 +232,5 @@ namespace TenmoClient
             Console.WriteLine("Status: " + transfer.TransferStatus);
             Console.WriteLine("Amount: $" + transfer.Amount);
         }
-
-
     }
 }
